@@ -1,0 +1,2 @@
+# FightBactGUI
+QT serial port

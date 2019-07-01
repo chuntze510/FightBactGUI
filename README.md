@@ -1,6 +1,6 @@
 # FightBactGUI
 ## 團隊:
-FightBact
+FightBact小隊
 ## 簡介:
 Fight Bact的QT GUI 介面撰寫
 ## 預計功能

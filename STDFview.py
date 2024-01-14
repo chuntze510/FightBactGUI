@@ -78,3 +78,33 @@ for _, row in df.iterrows():
 result_df.to_excel("wafer_map.xlsx")
 
 print("Excel表格已生成：wafer_map.xlsx")
+
+
+
+
+
+import openpyxl
+from openpyxl.styles import PatternFill
+
+# 读取Excel文件
+excel_file_path = "path/to/your/file.xlsx"
+wb = openpyxl.load_workbook(excel_file_path)
+sheet = wb.active
+
+# 定义好和坏的bin
+good_bin_values = [1, 3, 9]
+bad_bin_values = [5, 6]
+
+# 循环遍历除第一行和第一列之外的所有单元格
+for row in range(2, sheet.max_row + 1):
+    for col in range(2, sheet.max_column + 1):
+        cell_value = sheet.cell(row=row, column=col).value
+
+        # 根据条件设置背景颜色
+        if cell_value in good_bin_values:
+            sheet.cell(row=row, column=col).fill = PatternFill(start_color="00FF00", end_color="00FF00", fill_type="solid")  # 绿色
+        elif cell_value in bad_bin_values:
+            sheet.cell(row=row, column=col).fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")  # 红色
+
+# 保存修改后的Excel文件
+wb.save("path/to/your/modified_file.xlsx")

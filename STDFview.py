@@ -143,3 +143,48 @@ if __name__ == "__main__":
     else:
         excel_file_path = sys.argv[1]
         update_excel(excel_file_path)
+
+
+# 讀取 txt 檔案
+file_path = 'your_file.txt'  # 請替換成實際的檔案路徑
+output_file_path = 'output_result.txt'  # 請替換成希望輸出的檔案路徑
+
+try:
+    with open(file_path, 'r') as file:
+        input_data = file.read()
+except FileNotFoundError:
+    print(f"檔案 '{file_path}' 未找到。請確保檔案存在並提供正確的路徑。")
+    exit()
+
+# 尋找起始標籤 <VALUELOG>，截取到 </VALUELOG>
+start_tag = "<VALUELOG>"
+end_tag = "</VALUELOG>"
+
+start_index = input_data.find(start_tag)
+end_index = input_data.find(end_tag) + len(end_tag)
+
+# 提取 <VALUELOG> 到 </VALUELOG> 之間的內容
+if start_index != -1 and end_index != -1:
+    extracted_data = input_data[start_index:end_index]
+
+    # 分割行
+    lines = extracted_data.split('\n')
+
+    # 刪除 J 以後的所有行
+    lines_to_keep = []
+    for line in lines:
+        if line.startswith("J="):
+            break
+        lines_to_keep.append(line)
+
+    # 將處理後的內容替換原本的 <VALUELOG> 到 </VALUELOG> 之間的內容
+    processed_data = input_data[:start_index] + '\n'.join(lines_to_keep) + input_data[end_index:]
+
+    # 將處理後的內容印出並寫入到新檔案
+    with open(output_file_path, 'w') as output_file:
+        output_file.write(processed_data)
+
+    print(f"處理後的結果已寫入到 '{output_file_path}' 中。")
+
+else:
+    print("未找到符合條件的資料")

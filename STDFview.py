@@ -188,3 +188,40 @@ if start_index != -1 and end_index != -1:
 
 else:
     print("未找到符合條件的資料")
+
+
+
+
+如果你已经有一个Python脚本（.py文件）并希望使用Cython进行优化，可以按照以下步骤进行：
+
+创建.pyx文件： 将你的Python代码保存为一个以.pyx为扩展名的文件。这个文件将是Cython版本的源代码文件。例如，如果你的Python文件名为your_code.py，则你可以将其内容复制到一个新的your_code.pyx文件中。
+
+创建setup.py文件： 创建一个setup.py文件，用于构建Cython代码并生成扩展模块。示例setup.py可能如下：
+
+python
+Copy code
+from setuptools import setup
+from Cython.Build import cythonize
+
+setup(
+    ext_modules = cythonize("your_code.pyx")
+)
+构建和安装扩展模块： 在包含setup.py的目录中，运行以下命令：
+
+bash
+Copy code
+python setup.py build_ext --inplace
+这将生成一个共享库文件（.so文件或.pyd文件，取决于你的操作系统），该文件包含了Cython代码的编译版本。
+
+在Python中导入扩展模块： 在你的Python代码中，可以通过导入生成的共享库文件来使用Cython优化后的代码：
+
+python
+Copy code
+import your_code
+性能测试和优化： 测试你的代码以确保性能提升，并根据需要进行进一步的优化。
+
+这样，你就成功地将原始的Python代码转换为Cython代码，并生成了一个优化的共享库文件。请记住，Cython的性能提升效果可能会因代码的特性而异，因此建议在转换之后进行性能测试。
+
+
+
+

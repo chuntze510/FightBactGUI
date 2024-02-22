@@ -310,4 +310,30 @@ B≈14825.442
 這是方程組的一個解。請注意，這些數值是根據數值最小化方法計算得來的，可能存在數值誤差。如果有其他疑問，請隨時告訴我。
 
 
+import numpy as np
+from scipy.optimize import curve_fit
 
+# 已知的 V 和對應的 Y 值
+V_values = np.array([2.9, 2.75, 2.6])
+Y_values = np.array([0.00000045, 0.00000843, 0.00008510])
+
+# 定義擬合函數
+def exponential_function(V, A, B):
+    return A * np.exp(B * V)
+
+# 使用 curve_fit 函數進行擬合，修正參數的邊界
+params, covariance = curve_fit(exponential_function, V_values, Y_values, bounds=([0, -np.inf], [np.inf, 0]))
+
+# 得到擬合的 A 和 B 值
+new_A_value, new_B_value = params
+
+# 輸出結果
+print(f'新的 A 值: {new_A_value:.3f}')
+print(f'新的 B 值: {new_B_value:.3f}')
+
+# 驗算精度
+V_test = np.array([2.9, 2.75, 2.6])
+Y_pred = new_A_value * np.exp(new_B_value * V_test)
+
+# 輸出驗算結果
+print(f'驗算結果: {Y_pred}')

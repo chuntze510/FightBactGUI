@@ -393,3 +393,66 @@ End Sub
 
 
 
+
+
+
+
+
+
+Sub CustomCurveFit()
+    ' 定??入?据
+    Dim xValues As Variant
+    Dim yValues As Variant
+    
+    ' 假??据在A列和B列
+    xValues = Range("A1:A3").Value
+    yValues = Range("B1:B3").Value
+    
+    ' 定??合函???
+    Dim A As Double, Ea As Double, c As Double
+    
+    ' 初始猜?值
+    Ea = 0.85
+    A = 1
+    c = -1 ' ?根据??情??置初始值
+    
+    ' ?行曲??合
+    CustomFit xValues, yValues, A, Ea, c
+    
+    ' ?出?合方程式到指定?元格（假?在D1?元格）
+    Range("D1").Value = "方程式：" & vbCrLf & GetEquation(A, Ea, c)
+End Sub
+
+Sub CustomFit(xValues As Variant, yValues As Variant, ByRef A As Double, ByRef Ea As Double, ByRef c As Double)
+    ' 自定?曲??合函?，?里使用新的?合函?
+    ' A * EXP(Ea/(0.0000861733 * 363) - 12.71 * x)
+    
+    Dim sumXY As Double, sumX As Double, sumY As Double, sumX2 As Double
+    Dim n As Integer
+    
+    ' 初始化??
+    n = UBound(xValues) - LBound(xValues) + 1
+    sumXY = 0
+    sumX = 0
+    sumY = 0
+    sumX2 = 0
+    
+    ' ?算和
+    For i = LBound(xValues) To UBound(xValues)
+        sumXY = sumXY + xValues(i, 1) * Log(yValues(i, 1))
+        sumX = sumX + xValues(i, 1)
+        sumY = sumY + Log(yValues(i, 1))
+        sumX2 = sumX2 + xValues(i, 1) ^ 2
+    Next i
+    
+    ' ?算??
+    c = (sumY - sumX * Log(A) + 12.71 * sumX) / n
+    Ea = -c * 0.0000861733 * 363
+    Debug.Print (Ea)
+End Sub
+
+Function GetEquation(A As Double, Ea As Double, c As Double) As String
+    ' 返回?合方程式字符串
+    GetEquation = "y = " & A & " * Exp(" & Ea & "/(0.0000861733 * 363) - 12.71 * x)"
+End Function
+

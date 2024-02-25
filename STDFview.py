@@ -456,3 +456,58 @@ Function GetEquation(A As Double, Ea As Double, c As Double) As String
     GetEquation = "y = " & A & " * Exp(" & Ea & "/(0.0000861733 * 363) - 12.71 * x)"
 End Function
 
+
+
+Sub CustomCurveFit()
+    ' 定义输入数据
+    Dim xValues As Variant
+    Dim yValues As Variant
+    
+    ' 假设数据在A列和B列
+    xValues = Range("A1:A3").Value
+    yValues = Range("B1:B3").Value
+    
+    ' 定义拟合函数参数
+    Dim A As Double
+    
+    ' 初始猜测值
+    A = 1 ' 请根据实际情况设置初始值
+    
+    ' 执行曲线拟合
+    CustomFit xValues, yValues, A
+    
+    ' 输出拟合方程式到指定单元格（假设在D1单元格）
+    Range("D1").Value = "拟合方程式：" & vbCrLf & GetEquation(A)
+End Sub
+
+Sub CustomFit(xValues As Variant, yValues As Variant, ByRef A As Double)
+    ' 自定义曲线拟合函数，这里使用新的拟合函数
+    ' A * Exp(0.825/(0.0000861733 * 363) - 12.71 * V)
+    
+    Dim sumX As Double, sumLogY As Double, sumXLogY As Double, sumX2 As Double
+    Dim n As Integer
+    
+    ' 初始化参数
+    n = UBound(xValues) - LBound(xValues) + 1
+    sumX = 0
+    sumLogY = 0
+    sumXLogY = 0
+    sumX2 = 0
+    
+    ' 计算和
+    For i = LBound(xValues) To UBound(xValues)
+        sumX = sumX + xValues(i, 1)
+        sumLogY = sumLogY + Log(yValues(i, 1))
+        sumXLogY = sumXLogY + xValues(i, 1) * Log(yValues(i, 1))
+        sumX2 = sumX2 + xValues(i, 1) ^ 2
+    Next i
+    
+    ' 计算参数
+    A = Exp(0.825 / (0.0000861733 * 363) - 12.71 * sumX / n)
+End Sub
+
+Function GetEquation(A As Double) As String
+    ' 返回拟合方程式字符串
+    GetEquation = "y = " & A & " * Exp(0.825/(0.0000861733 * 363) - 12.71 * V)"
+End Function
+

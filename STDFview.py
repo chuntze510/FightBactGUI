@@ -337,3 +337,59 @@ Y_pred = new_A_value * np.exp(new_B_value * V_test)
 
 # 輸出驗算結果
 print(f'驗算結果: {Y_pred}')
+
+
+Sub CustomCurveFit()
+    ' 定??入?据
+    Dim xValues As Variant
+    Dim yValues As Variant
+    
+    ' 假??据在A列和B列
+    xValues = Range("A1:A3").Value
+    yValues = Range("B1:B3").Value
+    
+    ' 定??合函???
+    Dim A As Double, b As Double, c As Double
+    
+    ' 初始猜?值
+    A = 1
+    b = -1
+    c = 1
+    
+    ' ?行曲??合
+    CustomFit xValues, yValues, A, b, c
+    
+    ' ??合方程式?入C1?元格
+    Range("C1").Value = "y = " & A & " * Exp(" & b & " * x) + " & c
+End Sub
+
+Sub CustomFit(xValues As Variant, yValues As Variant, ByRef A As Double, ByRef b As Double, ByRef c As Double)
+    ' 自定?曲??合函?，?里使用??的指?形式
+    ' 如果需要更复?的?合函?，?根据??需求修改
+    
+    Dim sumXY As Double, sumX As Double, sumY As Double, sumX2 As Double
+    Dim n As Integer
+    
+    ' 初始化??
+    n = UBound(xValues) - LBound(xValues) + 1
+    sumXY = 0
+    sumX = 0
+    sumY = 0
+    sumX2 = 0
+    
+    ' ?算和
+    For i = LBound(xValues) To UBound(xValues)
+        sumXY = sumXY + xValues(i, 1) * Log(yValues(i, 1))
+        sumX = sumX + xValues(i, 1)
+        sumY = sumY + Log(yValues(i, 1))
+        sumX2 = sumX2 + xValues(i, 1) ^ 2
+    Next i
+    
+    ' ?算??
+    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ^ 2)
+    A = Exp((sumY - b * sumX) / n)
+    c = yValues(1, 1) - A * Exp(b * xValues(1, 1))
+End Sub
+
+
+

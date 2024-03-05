@@ -511,3 +511,15 @@ Function GetEquation(A As Double) As String
     GetEquation = "y = " & A & " * Exp(0.825/(0.0000861733 * 363) - 12.71 * V)"
 End Function
 
+5.1.2.3 V model [5.1.26 to 5.1.27]
+Two papers at 2000 IRPS reported data that showed the E model was no longer valid for gate oxide
+thickness values <4 nm. It was found that a model exponential with voltage rather than electric field
+represented the reliability performance well. Thus, the time-to-failure is expressed as:
+ TTF = Ao * exp(–β V) * exp(Eaa / kT) (5.1.4)
+where
+Ao = arbitrary scale factor, dependent upon materials & process details
+β = voltage acceleration parameter
+V = applied voltage
+Eaa = apparent activation energy, typically expressed in electronvolts (eV)
+k = Boltzmann’s constant
+T = temperature in kelvins 
